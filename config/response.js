@@ -1,9 +1,12 @@
-const E_SERVER = (err, code = 500 , message2 = 'Estamos teniendo problemas en el servidor, comuniquese con el administrador') => {
-    return {
-        message :  process.env.DEPLOY === 'produc' ? message2 : err.message,
+const E_SERVER = (err, code = 500, message = 'Estamos teniendo problemas en el servidor, comuniquese con el administrador') => {
+
+    resp = {
         code,
-        message2
     };
+
+    (process.env.DEPLOY === 'dev') ? resp.messageError = err.message : resp.message = message;
+
+    return resp
 }
 
 const OK_SERVER = (result = [], code = 200, message = 'succes execute') => {
