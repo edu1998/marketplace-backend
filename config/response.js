@@ -4,7 +4,7 @@ const E_SERVER = (err, code = 500, message = 'Estamos teniendo problemas en el s
         code,
     };
 
-    (process.env.DEPLOY === 'dev') ? resp.messageError = err.message : resp.message = message;
+    (process.env.DEPLOY === 'dev') ? resp.messageError = err.message : resp.messageError = message;
 
     return resp
 }

@@ -27,15 +27,47 @@ class MysqlPromise {
             const [rows] = await this.connect.execute(sql, values);
             return rows
         } catch (error) {
+            console.log(error);
             throw error
         }
     }
 
-    async insert(sql = '', values = '') {
+    async getOne(sql = '', value = []) {
         try {
-            const [rows ] = await this.connect.execute(sql, values);
+            const [rows] = await this.connect.execute(sql, value);
+            return rows[0]
+        } catch (error) {
+            console.log(error);
+            throw error
+        }
+    }
+
+    async insert(sql = '', values = []) {
+        try {
+            const [rows] = await this.connect.execute(sql, values);
             return rows
         } catch (error) {
+            console.log(error);
+            throw error
+        }
+    }
+
+    async update(sql = '', values = []) {
+        try {
+            const [rows] = await this.connect.execute(sql, values);
+            return rows
+        } catch (error) {
+            console.log(error);
+            throw error
+        }
+    }
+
+    async querey(sql = '', values = []) {
+        try {
+            const [rows] = await this.connect.execute(sql, values);
+            return rows
+        } catch (error) {
+            console.log(error);
             throw error
         }
     }
