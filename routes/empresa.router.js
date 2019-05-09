@@ -51,6 +51,15 @@ router.delete('/Categorias/:idCategoria', async (req, res) => {
     }
 })
 
+router.put('/Categorias', async (req, res) => {
+    try {
+        const result = await Empresa.updateCategoria(req.body)
+        res.status(200).send(result);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+})
+
 router.get('/Servicios/:idEmpresa', async (req, res) => {
     try {
         let result = await Empresa.getServicios(req.params.idEmpresa);
@@ -78,6 +87,15 @@ router.delete('/Servicios/:idServicio', async (req, res) => {
     }
 })
 
+router.put('/Servicios', async (req, res) => {
+    try {
+        const result = await Empresa.updateServicio(req.body)
+        res.status(200).send(result);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+})
+
 router.get('/Empleados/:idEmpresa', async (req, res) => {
     try {
         let result = await Empresa.getEmpleados(req.params.idEmpresa);
@@ -99,6 +117,15 @@ router.post('/Empleados', async (req, res) => {
 router.delete('/Empleados/:idEmpleado', async (req, res) => {
     try {
         const result = await Empresa.deleteEmpleado(req.params.idEmpleado);
+        res.status(200).send(result);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+})
+
+router.put('/Empleados', async (req, res) => {
+    try {
+        const result = await Empresa.updateEmpleado(req.body)
         res.status(200).send(result);
     } catch (error) {
         res.status(500).send(error);
