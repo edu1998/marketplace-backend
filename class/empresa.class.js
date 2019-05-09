@@ -180,4 +180,15 @@ module.exports = class Empresa {
             throw this.response.E_SERVER(error, 500)
         }
     }
+
+    async getEmpresasDireccion(direccion) {
+        try {
+            let result = await this.mysqlPromise.get(
+                `SELECT * FROM marketplace.empresa where ubicacion like '%${direccion}%'`
+            )
+            return this.response.OK_SERVER(result, 200, 'datos buscados exitosamente')
+        } catch (error) {
+            throw this.response.E_SERVER(error, 500)
+        }
+    }
 }

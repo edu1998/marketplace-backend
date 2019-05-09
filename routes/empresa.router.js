@@ -132,4 +132,14 @@ router.put('/Empleados', async (req, res) => {
     }
 })
 
+router.get('/EmpresaDireccion/:direccion', async (req, res) => {
+    try {
+        const result = await Empresa.getEmpresasDireccion(req.params.direccion);
+        res.status(200).send(result);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+})
+
+
 module.exports = router;
