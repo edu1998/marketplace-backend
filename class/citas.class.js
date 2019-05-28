@@ -67,4 +67,25 @@ module.exports = class Servicio {
             throw this.response.E_SERVER(error, 500)
         }
     }
+
+    async getCitasEmpresa(idEmpresa) {
+        try {
+            console.log(idEmpresa);
+            
+            const result = await this.mysqlPromise.get(
+                `select cli.identificacion idenCLiente,
+                c.fecha fecha_cita,
+                em.ubicacion ubicacion_empresa
+                from citas c
+                inner join empresa em on em.id = c.empresa_id
+                inner join clientes cli on cli.id = c.clientes_id
+                WHERE c.empresa_id = ? order by c.fecha`,
+                [idEmpresa]
+
+            )
+            return this.response.OK_SERVER(result, 200, 'Lista de citas cliente')
+        } catch (error) {
+            throw this.response.E_SERVER(error, 500)
+        }
+    }
 }

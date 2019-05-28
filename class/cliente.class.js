@@ -16,6 +16,17 @@ module.exports = class Cliente {
         }
     }
 
+    async getPersona(documento) {
+        try {
+            const info = await this.mysqlPromise.getOne(
+                `SELECT * FROM clientes where identificacion = ?`,
+                [documento])
+            return this.response.OK_SERVER(info)
+        } catch (error) {
+            throw this.response.E_SERVER(error, 500)
+        }
+    }
+
     async updateInfoCliente(info) {
         try {
             console.log(info);
