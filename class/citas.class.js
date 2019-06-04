@@ -29,6 +29,7 @@ module.exports = class Servicio {
 
     async SaveCitas(data) {
         try {
+            console.log(data);
 
             await this.mysqlPromise.connect.beginTransaction();
 
@@ -38,11 +39,12 @@ module.exports = class Servicio {
             )
             for (const servicio of data.servicios) {
                 this.mysqlPromise.insert(
-                    `INSERT INTO servicios_has_citas (servicios_id, citas_id) VALUES (?, ?)`,
-                    [servicio.id,result_cita.insertId]
+                    `INSERT INTO servicios_has_citas (servicios_id, citas_id,empleado_id) VALUES (?, ?, ?)`,
+                    [servicio.id, result_cita.insertId,servicio.empleado]
                 )
             }
             await this.mysqlPromise.connect.commit();
+            // await this.mysqlPromise.connect.rollback();
             return this.response.OK_SERVER(data, 200, 'Cita agendada')
         } catch (error) {
             await this.mysqlPromise.connect.rollback();
@@ -70,12 +72,11 @@ module.exports = class Servicio {
 
     async getCitasEmpresa(idEmpresa) {
         try {
-            console.log(idEmpresa);
-            
             const result = await this.mysqlPromise.get(
                 `select cli.identificacion idenCLiente,
                 c.fecha fecha_cita,
-                em.ubicacion ubicacion_empresa
+                em.ubicacion ubicacion_empresa,
+                c.id id_cita
                 from citas c
                 inner join empresa em on em.id = c.empresa_id
                 inner join clientes cli on cli.id = c.clientes_id
@@ -83,6 +84,19 @@ module.exports = class Servicio {
                 [idEmpresa]
 
             )
+
+            for (let i = 0; i < result.length; i++) {
+                const infocita = await this.mysqlPromise.get(
+                `SELECT sc.servicios_id,sc.citas_id,sc.empleado_id,
+                s.nombre nombre_servicio, concat(e.nombre, ' ', e.apellido) nom_empleado
+                FROM servicios_has_citas as sc
+                inner join servicios s on s.id = sc.servicios_id
+                left join empleados e on e.id = sc.empleado_id
+                where sc.citas_id = ?`,
+                [result[i].id_cita]
+                )
+                result[i].info_mas = infocita;
+            }
             return this.response.OK_SERVER(result, 200, 'Lista de citas cliente')
         } catch (error) {
             throw this.response.E_SERVER(error, 500)
